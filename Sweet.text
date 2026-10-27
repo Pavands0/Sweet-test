@@ -1,42 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sweet Shop Planners</title>
+<style>
+  :root {
+    --bg: #fff8f0; --card: #ffffff; --text: #3b2416; --muted: #7a6150;
+    --accent: #c2410c; --line: #f1dfcf;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1f1510; --card: #2b1d15; --text: #f6e9dc; --muted: #c4a58f;
+      --accent: #fb923c; --line: #4a3326;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1f1510; --card: #2b1d15; --text: #f6e9dc; --muted: #c4a58f;
+    --accent: #fb923c; --line: #4a3326;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", "Noto Sans Telugu", sans-serif; line-height: 1.5; }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+  .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .top select { width: auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+          padding: 16px; margin-bottom: 16px; }
+  label { display: block; font-weight: 600; margin: 10px 0 4px; font-size: .9rem; }
+  input, select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--line);
+                  background: var(--bg); color: var(--text); font-size: 1rem; }
+  .row { display: flex; gap: 10px; }
+  .row > div { flex: 1; }
+  button { width: 100%; margin-top: 16px; padding: 12px; border: 0; border-radius: 10px;
+           background: var(--accent); color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .chips { margin-top: 10px; max-height: 220px; overflow-y: auto; }
+  .chip { width: auto; margin: 3px; padding: 6px 10px; font-size: .85rem; font-weight: 500;
+          background: var(--bg); color: var(--text); border: 1px solid var(--line); }
+  h2 { font-size: 1.1rem; margin: 0 0 8px; }
+  table { width: 100%; border-collapse: collapse; }
+  td, th { text-align: left; padding: 8px 4px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-size: .8rem; text-transform: uppercase; }
+  td.qty { white-space: nowrap; font-weight: 600; }
+  ul { margin: 0; padding-left: 20px; }
+  .note { color: var(--muted); font-size: .9rem; margin-top: 8px; }
+  .err { color: #b91c1c; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <h1 data-t="title"></h1>
+    <select id="lang" aria-label="Language">
+      <option value="en">English</option>
+      <option value="te">తెలుగు</option>
+    </select>
+  </div>
+  <p class="sub" data-t="sub"></p>
 
-      English
-      తెలుగు
-    
+  <div class="card">
+    <label for="item" data-t="l_item"></label>
+    <input id="item">
+    <div class="row">
+      <div>
+        <label for="qty" data-t="l_qty"></label>
+        <input id="qty" type="number" min="1" value="5">
+      </div>
+      <div>
+        <label for="unit" data-t="l_unit"></label>
+        <select id="unit">
+          <option value="kg" data-t="u_kg"></option>
+          <option value="pieces" data-t="u_pc"></option>
+          <option value="boxes" data-t="u_bx"></option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label for="gper" data-t="l_g"></label>
+        <input id="gper" type="number" min="1" value="40">
+      </div>
+      <div>
+        <label for="price" data-t="l_p"></label>
+        <input id="price" type="number" min="0" value="20">
+      </div>
+    </div>
+    <button id="go"></button>
+  </div>
 
+  <div class="card">
+    <h2 data-t="b_h"></h2>
+    <div class="row">
+      <div><select id="ftype">
+        <option value="all" data-t="t_all"></option>
+        <option value="s" data-t="t_s"></option>
+        <option value="f" data-t="t_f"></option>
+        <option value="n" data-t="t_n"></option>
+      </select></div>
+      <div><select id="freg">
+        <option value="all" data-t="r_all"></option>
+        <option value="N" data-t="r_N"></option>
+        <option value="W" data-t="r_W"></option>
+        <option value="S" data-t="r_S"></option>
+        <option value="E" data-t="r_E"></option>
+        <option value="C" data-t="r_C"></option>
+        <option value="NE" data-t="r_NE"></option>
+        <option value="A" data-t="r_A"></option>
+      </select></div>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
 
+  <div id="out"></div>
 
+  <div class="card">
+    <h2 data-t="p_h"></h2>
+    <div class="row">
+      <div><label for="pc_ing" data-t="p_ing"></label><input id="pc_ing" type="number" min="0" placeholder="0"></div>
+      <div><label for="pc_ext" data-t="p_ext"></label><input id="pc_ext" type="number" min="0" placeholder="0"></div>
+    </div>
+    <div class="row">
+      <div><label for="pc_wst" data-t="p_wst"></label><input id="pc_wst" type="number" min="0" max="50" value="5"></div>
+      <div><label for="pc_mar" data-t="p_mar"></label><input id="pc_mar" type="number" min="0" max="90" value="30"></div>
+    </div>
+    <div id="pc_out" style="margin-top:12px"></div>
+  </div>
 
-          
-          
-          
-        
+  <div class="card">
+    <h2 data-t="s_h"></h2>
+    <div class="row">
+      <div><label for="s_sh" data-t="s_shape"></label><select id="s_sh"><option value="sq" data-t="s_sq"></option><option value="rc" data-t="s_rc"></option><option value="dm" data-t="s_dm"></option></select></div>
+      <div><label for="s_th" data-t="s_th"></label><input id="s_th" type="number" min="0.5" max="4" step="0.1" value="1.5"></div>
+      <div><label for="s_de" data-t="s_de"></label><input id="s_de" type="number" min="0.5" max="1.6" step="0.05" value="1.1"></div>
+    </div>
+    <svg id="s_svg" viewBox="0 0 640 230" width="100%" role="img"></svg>
+    <p class="note" id="s_note"></p>
+  </div>
+</main>
 
+<script>
+// 1. Words shown on the page, in English and Telugu
+const T = {
+  en: {
+    p_h: "Selling price calculator", p_ing: "Your ingredient cost for this batch (₹)", p_ext: "Labour, gas, packing per piece (₹)", p_wst: "Wastage (%)", p_mar: "Margin you want (%)",
+    p_hint: "Enter your batch ingredient cost above, with a quantity in kg or pieces, to see the suggested price.",
+    p_cost: "Total cost per piece", p_sug: "Suggested price per piece", p_kg: "Suggested price per kg", p_prof: "Profit for this batch", p_mine: "Profit at your price (₹{p})",
+    p_note: "Margin is a share of the selling price. Prices are rounded up to the next rupee.",
+    s_h: "Piece size (drawn to scale)", s_shape: "Shape", s_sq: "Square", s_rc: "Rectangle", s_dm: "Diamond", s_th: "Thickness (cm)", s_de: "Density (g/cm³)", s_top: "Top view", s_side: "Side view",
+    s_note: "Estimated from weight, thickness and density, so weigh and measure one real piece to confirm. {n} pieces per kg.",
+    title: "🍬 Sweet Shop Planner",
+    sub: "Pick an item and quantity to see pieces, sales value, selling price and piece size.",
+    l_item: "Item name", ph: "e.g. Gulab Jamun, Kalakand, Mysore Pak",
+    l_qty: "Quantity needed", l_unit: "Unit", u_kg: "kg", u_pc: "pieces", u_bx: "boxes",
+    l_g: "Weight of one piece (g)", l_p: "Price of one piece (₹)",
+    go: "Show pieces & sales", busy: "Working...",
+    b_h: "Indian sweets & snacks: tap to choose",
+    t_all: "All types", t_s: "Sweets", t_f: "Sugar-free", t_n: "Namkeen / Snacks",
+    r_all: "All regions", r_N: "North India", r_W: "West India", r_S: "South India",
+    r_E: "East India", r_C: "Central India", r_NE: "North-East India", r_A: "All-India",
+    e_in: "Please enter an item name and quantity.",
+    e_go: "Something went wrong. Please try again.",
+    e_ai: "AI is not available here. Open this page in Claude.",
+    h_ing: "Ingredients for ", th_i: "Ingredient", th_q: "Quantity",
+    h_w: "Avoid waste", h_p: "Make it attractive",
+    c_h: "Pieces & sales", c_pcs: "Total pieces", c_val: "Total sales value",
+    c_note: "Worked out at {g} g per piece and ₹{p} per piece. Change the boxes above to match your real piece size.",
+    x_pr: "Profit / loss at your price", x_pn: "Profit is after ingredient cost only. Labour, gas, packing and rent are not included.",
+    x_h: "Price estimate by city", x_city: "City", x_cost: "Ingredient cost", x_kg: "Market price / kg", x_pc: "Price / piece",
+    x_note: "These are AI estimates, not live market rates. Check with your local suppliers before fixing prices.",
+    x_hyd: "Hyderabad", x_viz: "Visakhapatnam (Vizag)", x_vzm: "Vizianagaram",
+    lang_ai: "English"
+  },
+  te: {
+    p_h: "అమ్మకం ధర కాలిక్యులేటర్", p_ing: "ఈ బ్యాచ్‌కు మీ పదార్థాల ఖర్చు (₹)", p_ext: "ఒక్క ముక్కకు కూలీ, గ్యాస్, ప్యాకింగ్ (₹)", p_wst: "వృథా (%)", p_mar: "కావలసిన మార్జిన్ (%)",
+    p_hint: "సూచించిన ధర చూడటానికి మీ బ్యాచ్ పదార్థాల ఖర్చు ఇవ్వండి, పరిమాణం కిలోలు లేదా ముక్కలలో ఇవ్వండి.",
+    p_cost: "ఒక్క ముక్క మొత్తం ఖర్చు", p_sug: "సూచించిన ధర / ముక్క", p_kg: "సూచించిన ధర / కిలో", p_prof: "ఈ బ్యాచ్ లాభం", p_mine: "మీ ధర (₹{p}) వద్ద లాభం",
+    p_note: "మార్జిన్ అంటే అమ్మకం ధరలో వాటా. ధరను తదుపరి రూపాయికి పెంచాం.",
+    s_h: "ముక్క సైజు (స్కేల్‌లో)", s_shape: "ఆకారం", s_sq: "చతురస్రం", s_rc: "దీర్ఘచతురస్రం", s_dm: "డైమండ్", s_th: "మందం (సెం.మీ)", s_de: "సాంద్రత (గ్రా/సెం.మీ³)", s_top: "పై నుండి", s_side: "పక్క నుండి",
+    s_note: "బరువు, మందం, సాంద్రత నుండి అంచనా. ఒక అసలు ముక్కను తూచి కొలిచి సరిచూడండి. కిలోకు {n} ముక్కలు.",
+    title: "🍬 స్వీట్ షాప్ ప్లానర్",
+    sub: "ఐటమ్, పరిమాణం ఎంచుకుంటే ముక్కలు, అమ్మకం విలువ, ధర, ముక్క సైజు తెలుస్తాయి.",
+    l_item: "ఐటమ్ పేరు", ph: "ఉదా. గులాబ్ జామూన్, కల్కండ్, మైసూర్ పాక్",
+    l_qty: "కావలసిన పరిమాణం", l_unit: "యూనిట్", u_kg: "కిలోలు", u_pc: "ముక్కలు", u_bx: "బాక్సులు",
+    l_g: "ఒక్క ముక్క బరువు (గ్రా)", l_p: "ఒక్క ముక్క ధర (₹)",
+    go: "ముక్కలు & అమ్మకం చూపించు", busy: "పని చేస్తోంది...",
+    b_h: "భారతదేశ స్వీట్లు & స్నాక్స్: నొక్కి ఎంచుకోండి",
+    t_all: "అన్ని రకాలు", t_s: "స్వీట్లు", t_f: "షుగర్ ఫ్రీ", t_n: "నమ్కీన్ / స్నాక్స్",
+    r_all: "అన్ని ప్రాంతాలు", r_N: "ఉత్తర భారతం", r_W: "పశ్చిమ భారతం", r_S: "దక్షిణ భారతం",
+    r_E: "తూర్పు భారతం", r_C: "మధ్య భారతం", r_NE: "ఈశాన్య భారతం", r_A: "దేశమంతటా",
+    e_in: "దయచేసి ఐటమ్ పేరు, పరిమాణం ఇవ్వండి.",
+    e_go: "ఏదో తప్పు జరిగింది. మళ్లీ ప్రయత్నించండి.",
+    e_ai: "ఇక్కడ AI అందుబాటులో లేదు. ఈ పేజీని Claude లో తెరవండి.",
+    h_ing: "పదార్థాలు: ", th_i: "పదార్థం", th_q: "పరిమాణం",
+    h_w: "వృథా తగ్గించే చిట్కాలు", h_p: "ఆకర్షణీయంగా చూపించండి",
+    c_h: "ముక్కలు & అమ్మకం", c_pcs: "మొత్తం ముక్కలు", c_val: "మొత్తం అమ్మకం విలువ",
+    c_note: "ఒక్క ముక్క {g} గ్రా, ధర ₹{p} అని లెక్కించాం. మీ అసలు ముక్క సైజుకు పైన మార్చండి.",
+    x_pr: "మీ ధరతో లాభం / నష్టం", x_pn: "ఇది పదార్థాల ఖర్చు తీసివేసిన తర్వాత మాత్రమే. కూలీ, గ్యాస్, ప్యాకింగ్, అద్దె కలపలేదు.",
+    x_h: "నగరాల వారీగా ధర అంచనా", x_city: "నగరం", x_cost: "పదార్థాల ఖర్చు", x_kg: "మార్కెట్ ధర / కిలో", x_pc: "ధర / ముక్క",
+    x_note: "ఇవి AI అంచనాలు, ప్రస్తుత మార్కెట్ రేట్లు కావు. ధర నిర్ణయించే ముందు మీ స్థానిక సరఫరాదారులతో సరిచూడండి.",
+    x_hyd: "హైదరాబాద్", x_viz: "విశాఖపట్నం (వైజాగ్)", x_vzm: "విజయనగరం",
+    lang_ai: "Telugu (తెలుగు script)"
+  }
+};
+let lang = "en";
 
+// 2. All-India list: Name | region | type (s = sweet, f = sugar-free, n = namkeen/snack)
+const RAW =
+ "Gulab Jamun|N|s;Jalebi|N|s;Peda|N|s;Kalakand|N|s;Barfi|N|s;Gajar Halwa|N|s;Soan Papdi|N|s;Besan Ladoo|N|s;Rabri|N|s;Petha|N|s;Balushahi|N|s;Sohan Halwa|N|s;Ghewar|N|s;Malpua|N|s;Moong Dal Halwa|N|s;Imarti|N|s;" +
+ "Shrikhand|W|s;Basundi|W|s;Puran Poli|W|s;Modak|W|s;Mohanthal|W|s;Doodh Pak|W|s;Sutarfeni|W|s;Ghari|W|s;Shankarpali|W|s;" +
+ "Mysore Pak|S|s;Pootharekulu|S|s;Bobbatlu|S|s;Ariselu|S|s;Sunnundalu|S|s;Kajjikayalu|S|s;Badusha|S|s;Double ka Meetha|S|s;Qubani ka Meetha|S|s;Rava Ladoo|S|s;Adhirasam|S|s;Palada Payasam|S|s;Unni Appam|S|s;Dharwad Peda|S|s;Coconut Burfi|S|s;Paal Kova|S|s;Tirupati-style Laddu|S|s;" +
+ "Rasgulla|E|s;Sandesh|E|s;Mishti Doi|E|s;Rasmalai|E|s;Chum Chum|E|s;Pantua|E|s;Chhena Poda|E|s;Rasabali|E|s;Langcha|E|s;" +
+ "Khoya Jalebi|C|s;Mawa Bati|C|s;Pitha|NE|s;Narikol Laddu|NE|s;" +
+ "Kaju Katli|A|s;Boondi Ladoo|A|s;Motichoor Ladoo|A|s;Coconut Ladoo|A|s;Kheer|A|s;" +
+ "Dry Fruit Ladoo (dates & figs)|A|f;Anjeer Barfi|A|f;Khajur Roll|A|f;Oats Ladoo (no added sugar)|A|f;Sugar-free Kheer|A|f;Ragi Ladoo (low sugar)|S|f;Sugar-free Rasgulla|E|f;Sugar-free Sandesh|E|f;Dates Halwa (no sugar)|N|f;" +
+ "Khakhra|W|n;Gathiya|W|n;Fafda|W|n;Thepla|W|n;Dhokla|W|n;Chivda|W|n;Sev|W|n;Sev Papdi|W|n;Bikaneri Bhujia|N|n;Mathri|N|n;Namak Para|N|n;Aloo Bhujia|N|n;Khasta Kachori|N|n;Samosa|N|n;" +
+ "Murukku|S|n;Chakli|S|n;South Indian Mixture|S|n;Kara Boondi|S|n;Ribbon Pakoda|S|n;Banana Chips|S|n;Chegodilu|S|n;Janthikalu|S|n;Sakinalu|S|n;Jhalmuri|E|n;Nimki|E|n;Chanachur|E|n";
+const CAT = RAW.split(";").map(x => { const p = x.split("|"); return { n: p[0], r: p[1], t: p[2] }; });
 
-        
-        
-        
-        
-      
-        
-        
-        
-        
-        
-        
-        
-        
-      
+// 3. Grab the parts of the page we need to control
+const itemEl = document.getElementById("item");
+const qtyEl = document.getElementById("qty");
+const unitEl = document.getElementById("unit");
+const gEl = document.getElementById("gper");
+const pEl = document.getElementById("price");
+const goBtn = document.getElementById("go");
+const out = document.getElementById("out");
+const langEl = document.getElementById("lang");
+const ftype = document.getElementById("ftype");
+const freg = document.getElementById("freg");
+const chips = document.getElementById("chips");
 
+// 4. Safely add text to the page
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = String(s ?? "");
+  return d.innerHTML;
+}
+const fmt = n => Number(n).toLocaleString("en-IN");
 
+// 5. Switch the page between English and Telugu
+function applyLang() {
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t[el.dataset.t]; });
+  itemEl.placeholder = t.ph;
+  goBtn.textContent = t.go;
+  out.innerHTML = "";
+}
+langEl.addEventListener("change", () => { lang = langEl.value; applyLang(); priceCalc(); drawSize(); });
 
+// 6. Show the item buttons for the chosen type and region
+function showChips() {
+  const ty = ftype.value, rg = freg.value;
+  chips.innerHTML = CAT.filter(c => (ty === "all" || c.t === ty) && (rg === "all" || c.r === rg))
+    .map(c => '<button class="chip" data-name="' + esc(c.n) + '">' + esc(c.n) + "</button>").join("");
+}
+chips.addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (b) { itemEl.value = b.dataset.name; window.scrollTo({ top: 0, behavior: "smooth" }); }
+});
+ftype.addEventListener("change", showChips);
+freg.addEventListener("change", showChips);
 
+// 7. Work out pieces and sales value (plain maths, no AI)
+function calcCard() {
+  const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), p = parseFloat(pEl.value), u = unitEl.value, t = T[lang];
+  if (!(q > 0) || !(p >= 0)) return "";
+  let pcs;
+  if (u === "kg") { if (!(g > 0)) return ""; pcs = Math.floor(q * 1000 / g); }
+  else if (u === "pieces") pcs = q;
+  else return "";
+  return '<div class="card"><h2>' + t.c_h + "</h2><table>" +
+    "<tr><td>" + t.c_pcs + '</td><td class="qty">' + fmt(pcs) + "</td></tr>" +
+    "<tr><td>" + t.c_val + '</td><td class="qty">₹' + fmt(pcs * p) + "</td></tr></table>" +
+    (u === "kg" ? '<p class="note">' + t.c_note.replace("{g}", g).replace("{p}", p) + "</p>" : "") + "</div>";
+}
 
+// 8. Show pieces and sales value (no AI needed)
+function plan() {
+  const t = T[lang];
+  if (!itemEl.value.trim() || !qtyEl.value) { out.innerHTML = '<p class="err">' + t.e_in + "</p>"; return; }
+  out.innerHTML = '<div class="card"><h2>' + esc(itemEl.value.trim()) + "</h2></div>" + calcCard();
+  priceCalc();
+  drawSize();
+}
 
+// 8b. Price estimate for each city (numbers come from Claude, maths is done here)
+function cityCard(d) {
+  const t = T[lang], g = parseFloat(gEl.value);
+  const q = parseFloat(qtyEl.value), u = unitEl.value, myPrice = parseFloat(pEl.value) || 0;
+  const pcs = u === "kg" ? (g > 0 ? Math.floor(q * 1000 / g) : 0) : (u === "pieces" ? q : 0);
+  const names = { Hyderabad: t.x_hyd, Visakhapatnam: t.x_viz, Vizianagaram: t.x_vzm };
+  const cities = d.cities || [];
+  if (!cities.length) return "";
+  const rows = cities.map(c => {
+    const perKg = Number(c.market_price_per_kg) || 0;
+    const perPc = g > 0 ? Math.round(perKg * g / 1000) : 0;
+    const cost = Math.round(Number(c.ingredient_cost) || 0);
+    const pr = Math.round(pcs * myPrice - cost);
+    const prCell = pcs > 0
+      ? '<td class="qty"' + (pr < 0 ? ' style="color:#b91c1c"' : "") + ">" + (pr < 0 ? "−₹" : "₹") + fmt(Math.abs(pr)) + "</td>"
+      : '<td class="qty">-</td>';
+    return "<tr><td>" + esc(names[c.city] || c.city) + '</td><td class="qty">₹' + fmt(Math.round(Number(c.ingredient_cost) || 0)) +
+      '</td><td class="qty">₹' + fmt(perKg) + '</td><td class="qty">₹' + fmt(perPc) + "</td>" + prCell + "</tr>";
+  }).join("");
+  return '<div class="card"><h2>' + t.x_h + "</h2><table><tr><th>" + t.x_city + "</th><th>" + t.x_cost + "</th><th>" + t.x_kg + "</th><th>" + t.x_pc + "</th><th>" + t.x_pr +
+    "</th></tr>" + rows + '</table><p class="note">' + t.x_note + " " + t.x_pn + "</p></div>";
+}
 
+// 9. Show the result as cards
+function show(d, calc) {
+  const t = T[lang];
+  const rows = (d.ingredients || []).map(i =>
+    "<tr><td>" + esc(i.name) + (i.note ? '<div class="note">' + esc(i.note) + "</div>" : "") +
+    '</td><td class="qty">' + esc(i.amount) + "</td></tr>").join("");
+  const li = arr => (arr || []).map(x => "<li>" + esc(x) + "</li>").join("");
 
+  out.innerHTML = calc +
+    '<div class="card"><h2>' + t.h_ing + esc(d.item) + "</h2>" +
+    "<table><tr><th>" + t.th_i + "</th><th>" + t.th_q + "</th></tr>" + rows + "</table>" +
+    '<p class="note">' + esc(d.yield_note) + "</p></div>" +
+    '<div class="card"><h2>' + t.h_w + "</h2><ul>" + li(d.waste_tips) + "</ul></div>" +
+    '<div class="card"><h2>' + t.h_p + "</h2><ul>" + li(d.presentation) + "</ul></div>" + cityCard(d);
+}
 
+// 10. Selling price calculator (uses your own costs, plain maths)
+function getPieces() {
+  const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), u = unitEl.value;
+  if (!(q > 0)) return 0;
+  if (u === "kg") return g > 0 ? Math.floor(q * 1000 / g) : 0;
+  return u === "pieces" ? q : 0;
+}
+function priceCalc() {
+  const t = T[lang], o = document.getElementById("pc_out"), v = id => parseFloat(document.getElementById(id).value) || 0;
+  const ing = v("pc_ing"), ext = v("pc_ext"), ws = v("pc_wst"), mg = v("pc_mar");
+  const pcs = getPieces(), g = parseFloat(gEl.value), mine = parseFloat(pEl.value) || 0;
+  if (!(ing > 0) || !(pcs > 0) || mg >= 100) { o.innerHTML = '<p class="note">' + t.p_hint + "</p>"; return; }
+  const cost = ing / pcs * (1 + ws / 100) + ext;
+  const sug = Math.ceil(cost / (1 - mg / 100));
+  const kg = g > 0 ? Math.round(sug * 1000 / g) : 0;
+  const pf = x => { const r = Math.round(x); return '<td class="qty"' + (r < 0 ? ' style="color:#b91c1c"' : "") + ">" + (r < 0 ? "−" : "") + "₹" + fmt(Math.abs(r)) + "</td>"; };
+  const row = (l, c) => "<tr><td>" + l + "</td>" + c + "</tr>";
+  o.innerHTML = "<table>" +
+    row(t.p_cost, '<td class="qty">₹' + cost.toFixed(1) + "</td>") +
+    row(t.p_sug, '<td class="qty">₹' + fmt(sug) + "</td>") +
+    row(t.p_kg, '<td class="qty">₹' + fmt(kg) + "</td>") +
+    row(t.p_prof, pf((sug - cost) * pcs)) +
+    row(t.p_mine.replace("{p}", mine), pf((mine - cost) * pcs)) +
+    '</table><p class="note">' + t.p_note + "</p>";
+}
+["pc_ing", "pc_ext", "pc_wst", "pc_mar", "qty", "unit", "gper", "price"].forEach(id => document.getElementById(id).addEventListener("input", priceCalc));
 
+// 11. Piece size drawing (top view and side view, drawn to scale)
+function drawSize() {
+  const t = T[lang], svgEl = document.getElementById("s_svg");
+  const g = parseFloat(gEl.value), th = parseFloat(document.getElementById("s_th").value), de = parseFloat(document.getElementById("s_de").value);
+  if (!(g > 0 && th > 0 && de > 0)) { svgEl.innerHTML = ""; return; }
+  const sh = document.getElementById("s_sh").value, A = g / de / th;
+  let a, b;
+  if (sh === "sq") { a = b = Math.sqrt(A); } else if (sh === "rc") { b = Math.sqrt(A / 1.5); a = 1.5 * b; } else { b = Math.sqrt(A / 0.75); a = 1.5 * b; }
+  const s = Math.min(24, 150 / Math.max(a, b, 1)), cx = 170, cy = 105, pw = a * s, ph = b * s;
+  const f = 'fill="var(--line)" stroke="var(--accent)" stroke-width="1.5"', l = 'stroke="var(--muted)" stroke-width="1"';
+  const tx = (x, y, val, an) => '<text x="' + x + '" y="' + y + '" text-anchor="' + (an || "middle") + '" font-size="13" fill="var(--muted)">' + val + "</text>";
+  const shape = sh === "dm"
+    ? '<polygon points="' + cx + "," + (cy - ph / 2) + " " + (cx + pw / 2) + "," + cy + " " + cx + "," + (cy + ph / 2) + " " + (cx - pw / 2) + "," + cy + '" ' + f + "/>"
+    : '<rect x="' + (cx - pw / 2) + '" y="' + (cy - ph / 2) + '" width="' + pw + '" height="' + ph + '" rx="2" ' + f + "/>";
+  const yb = cy + ph / 2 + 14, xr = cx + pw / 2 + 14, c2 = 470, sw = Math.min(pw, 180), tt = Math.max(th * s, 5);
+  svgEl.innerHTML = shape +
+    '<line x1="' + (cx - pw / 2) + '" y1="' + yb + '" x2="' + (cx + pw / 2) + '" y2="' + yb + '" ' + l + "/>" + tx(cx, yb + 16, a.toFixed(1) + " cm") +
+    '<line x1="' + xr + '" y1="' + (cy - ph / 2) + '" x2="' + xr + '" y2="' + (cy + ph / 2) + '" ' + l + "/>" + tx(xr + 6, cy + 4, b.toFixed(1) + " cm", "start") +
+    '<rect x="' + (c2 - sw / 2) + '" y="' + (cy - tt / 2) + '" width="' + sw + '" height="' + tt + '" rx="2" ' + f + "/>" + tx(c2 + sw / 2 + 10, cy + 4, th.toFixed(1) + " cm", "start") +
+    tx(cx, 16, t.s_top) + tx(c2, 16, t.s_side);
+  document.getElementById("s_note").textContent = t.s_note.replace("{n}", Math.floor(1000 / g));
+}
+["s_sh", "s_th", "s_de", "gper"].forEach(id => document.getElementById(id).addEventListener("input", drawSize));
 
-
-
+goBtn.addEventListener("click", plan);
+applyLang();
+showChips();
+priceCalc();
+drawSize();
+</script>
+</body>
+</html>
