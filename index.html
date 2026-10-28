@@ -172,8 +172,12 @@
 // 1. Words shown on the page, in English and Telugu
 const T = {
   en: {
-    c2_h: "Price by city (your own rates)", c2_hint: "Type your batch ingredient cost and the market price per kg for each city.", c2_cpp: "Cost / piece",
-    c2_note: "Based only on the numbers you type. Check your local suppliers and shops for real rates.",
+    rt_h: "Ingredient rates by city (₹ per kg or litre)", rt_note: "Starting estimates only. Type your real local rates and the costs update at once.",
+    c3_batch: "Batch cost", c3_sug: "Suggested price", c3_mkt: "Market price / piece",
+    r_h: "Ingredients for {q} kg (starter recipe)", r_none: "No recipe is saved for this item yet. Send your own recipe and it will be added.",
+    r_note: "Approximate starter amounts per kg of finished sweet. Your own recipe will replace these. Recipe text is in English for now.",
+    c2_h: "Price by city (your own rates)", c2_hint: "Costs fill in from the ingredient rates above. Type a batch cost to replace it, and the market price per kg for each city.", c2_cpp: "Cost / piece",
+    c2_note: "Ingredient rates are starting estimates. Check your local suppliers and shops for real rates.",
     p_h: "Selling price calculator", p_ing: "Your ingredient cost for this batch (₹)", p_ext: "Labour, gas, packing per piece (₹)", p_wst: "Wastage (%)", p_mar: "Margin you want (%)",
     p_hint: "Enter your batch ingredient cost above, with a quantity in kg or pieces, to see the suggested price.",
     p_cost: "Total cost per piece", p_sug: "Suggested price per piece", p_kg: "Suggested price per kg", p_prof: "Profit for this batch", p_mine: "Profit at your price (₹{p})",
@@ -197,15 +201,19 @@ const T = {
     h_w: "Avoid waste", h_p: "Make it attractive",
     c_h: "Pieces & sales", c_pcs: "Total pieces", c_val: "Total sales value",
     c_note: "Worked out at {g} g per piece and ₹{p} per piece. Change the boxes above to match your real piece size.",
-    x_pr: "Profit / loss at your price", x_pn: "Profit is after ingredient cost only. Labour, gas, packing and rent are not included.",
+    x_pr: "Profit / loss at your price", x_pn: "Profit includes the wastage, labour, gas and packing you entered in the price calculator. Rent and other shop costs are not included.",
     x_h: "Price estimate by city", x_city: "City", x_cost: "Ingredient cost", x_kg: "Market price / kg", x_pc: "Price / piece",
     x_note: "These are AI estimates, not live market rates. Check with your local suppliers before fixing prices.",
     x_hyd: "Hyderabad", x_viz: "Visakhapatnam (Vizag)", x_vzm: "Vizianagaram",
     lang_ai: "English"
   },
   te: {
-    c2_h: "నగరాల వారీగా ధర (మీ సొంత రేట్లు)", c2_hint: "ప్రతి నగరానికి మీ బ్యాచ్ పదార్థాల ఖర్చు, కిలో మార్కెట్ ధర ఇవ్వండి.", c2_cpp: "ఖర్చు / ముక్క",
-    c2_note: "మీరు ఇచ్చిన సంఖ్యల ఆధారంగా మాత్రమే. నిజమైన రేట్ల కోసం స్థానిక సరఫరాదారులు, షాపులను అడగండి.",
+    rt_h: "నగరాల వారీగా పదార్థాల రేట్లు (₹ కిలో లేదా లీటర్‌కు)", rt_note: "ఇవి ప్రారంభ అంచనాలు మాత్రమే. మీ నిజమైన స్థానిక రేట్లు ఇవ్వండి, ఖర్చులు వెంటనే మారుతాయి.",
+    c3_batch: "బ్యాచ్ ఖర్చు", c3_sug: "సూచించిన ధర", c3_mkt: "మార్కెట్ ధర / ముక్క",
+    r_h: "{q} కిలోలకు పదార్థాలు (ప్రాథమిక రెసిపీ)", r_none: "ఈ ఐటమ్‌కు ఇంకా రెసిపీ లేదు. మీ రెసిపీ ఇస్తే చేర్చుతాను.",
+    r_note: "ఇవి కిలో తయారైన స్వీట్‌కు సుమారు ప్రాథమిక కొలతలు. మీ సొంత రెసిపీ వచ్చాక మారుస్తాం. రెసిపీ వివరాలు ప్రస్తుతం ఇంగ్లీషులో ఉన్నాయి.",
+    c2_h: "నగరాల వారీగా ధర (మీ సొంత రేట్లు)", c2_hint: "ఖర్చులు పై పదార్థాల రేట్ల నుండి వస్తాయి. మార్చాలంటే బ్యాచ్ ఖర్చు ఇవ్వండి, అలాగే ప్రతి నగరానికి కిలో మార్కెట్ ధర ఇవ్వండి.", c2_cpp: "ఖర్చు / ముక్క",
+    c2_note: "పదార్థాల రేట్లు ప్రారంభ అంచనాలు మాత్రమే. నిజమైన రేట్ల కోసం స్థానిక సరఫరాదారులు, షాపులను అడగండి.",
     p_h: "అమ్మకం ధర కాలిక్యులేటర్", p_ing: "ఈ బ్యాచ్‌కు మీ పదార్థాల ఖర్చు (₹)", p_ext: "ఒక్క ముక్కకు కూలీ, గ్యాస్, ప్యాకింగ్ (₹)", p_wst: "వృథా (%)", p_mar: "కావలసిన మార్జిన్ (%)",
     p_hint: "సూచించిన ధర చూడటానికి మీ బ్యాచ్ పదార్థాల ఖర్చు ఇవ్వండి, పరిమాణం కిలోలు లేదా ముక్కలలో ఇవ్వండి.",
     p_cost: "ఒక్క ముక్క మొత్తం ఖర్చు", p_sug: "సూచించిన ధర / ముక్క", p_kg: "సూచించిన ధర / కిలో", p_prof: "ఈ బ్యాచ్ లాభం", p_mine: "మీ ధర (₹{p}) వద్ద లాభం",
@@ -229,7 +237,7 @@ const T = {
     h_w: "వృథా తగ్గించే చిట్కాలు", h_p: "ఆకర్షణీయంగా చూపించండి",
     c_h: "ముక్కలు & అమ్మకం", c_pcs: "మొత్తం ముక్కలు", c_val: "మొత్తం అమ్మకం విలువ",
     c_note: "ఒక్క ముక్క {g} గ్రా, ధర ₹{p} అని లెక్కించాం. మీ అసలు ముక్క సైజుకు పైన మార్చండి.",
-    x_pr: "మీ ధరతో లాభం / నష్టం", x_pn: "ఇది పదార్థాల ఖర్చు తీసివేసిన తర్వాత మాత్రమే. కూలీ, గ్యాస్, ప్యాకింగ్, అద్దె కలపలేదు.",
+    x_pr: "మీ ధరతో లాభం / నష్టం", x_pn: "లాభంలో ధర కాలిక్యులేటర్‌లో మీరు ఇచ్చిన వృథా, కూలీ, గ్యాస్, ప్యాకింగ్ కలిపాం. అద్దె, ఇతర ఖర్చులు కలపలేదు.",
     x_h: "నగరాల వారీగా ధర అంచనా", x_city: "నగరం", x_cost: "పదార్థాల ఖర్చు", x_kg: "మార్కెట్ ధర / కిలో", x_pc: "ధర / ముక్క",
     x_note: "ఇవి AI అంచనాలు, ప్రస్తుత మార్కెట్ రేట్లు కావు. ధర నిర్ణయించే ముందు మీ స్థానిక సరఫరాదారులతో సరిచూడండి.",
     x_hyd: "హైదరాబాద్", x_viz: "విశాఖపట్నం (వైజాగ్)", x_vzm: "విజయనగరం",
@@ -314,8 +322,9 @@ function calcCard() {
 function plan() {
   const t = T[lang];
   if (!itemEl.value.trim() || !qtyEl.value) { out.innerHTML = '<p class="err">' + t.e_in + "</p>"; return; }
-  out.innerHTML = '<div class="card"><h2>' + esc(itemEl.value.trim()) + "</h2></div>" + calcCard();
+  out.innerHTML = '<div class="card"><h2>' + esc(itemEl.value.trim()) + "</h2></div>" + calcCard() + recipeCard();
   priceCalc();
+  cityCalc();
   drawSize();
 }
 
@@ -409,30 +418,112 @@ function drawSize() {
 }
 ["s_sh", "s_th", "s_de", "gper"].forEach(id => document.getElementById(id).addEventListener("input", drawSize));
 
+// 11b. Starter recipes per 1 kg of finished sweet (replace with your own recipes)
+const REC = {
+  kalakand: { a: ["kalakand", "kalkand", "kalkanda"],
+    i: [["Full-cream milk", 4000, "ml"], ["Sugar", 300, "g"], ["Ghee", 20, "g"], ["Cardamom powder", 2, "g"], ["Citric acid", 3, "g"], ["Pistachios", 20, "g"]],
+    w: ["Stir the milk all the time so nothing sticks and burns at the bottom.", "Keep the whey and use it in dough or curries.", "Sell cut edges and broken pieces as a mixed pack."],
+    p: ["Sprinkle chopped pistachio on top.", "Cut into even squares and place on butter paper.", "Pack in a window box so the colour shows."] },
+  kaju: { a: ["kaju", "cashew"],
+    i: [["Cashew nuts", 700, "g"], ["Sugar", 350, "g"], ["Water", 175, "ml"], ["Ghee", 30, "g"], ["Cardamom powder", 2, "g"]],
+    w: ["Grind the cashew in short bursts so it does not turn oily.", "Re-roll the dough trimmings and cut again.", "Keep broken pieces for a mixed box or for mithai fillings."],
+    p: ["Cut clean diamonds of the same size.", "Add a thin silver varq on top.", "Pack in rows in a gift box with a paper divider."] },
+  "gulab jamun": { a: ["gulab jamun", "jamun"],
+    i: [["Khoya (mawa)", 450, "g"], ["Maida", 70, "g"], ["Baking soda", 2, "g"], ["Milk", 40, "ml"], ["Sugar (for syrup)", 600, "g"], ["Water (for syrup)", 600, "ml"], ["Cardamom powder", 3, "g"]],
+    w: ["Knead the dough lightly and keep it covered so it does not dry.", "Fry on low heat so the jamuns do not split.", "Reuse extra syrup for the next batch."],
+    p: ["Serve warm in a small bowl with a little syrup.", "Top with sliced pistachio.", "Sell as a box with a separate syrup tub."] },
+  "mysore pak": { a: ["mysore pak"],
+    i: [["Besan (gram flour)", 200, "g"], ["Sugar", 500, "g"], ["Ghee", 500, "g"], ["Water", 250, "ml"]],
+    w: ["Sieve the besan so there are no lumps to throw away.", "Cut while it is warm to avoid broken pieces.", "Use the crumbs in laddu."],
+    p: ["Cut into neat rectangles.", "Layer in a box with butter paper between pieces.", "Show the ghee shine under good light."] },
+  "besan ladoo": { a: ["besan ladoo", "besan laddu"],
+    i: [["Besan (gram flour)", 450, "g"], ["Ghee", 250, "g"], ["Powdered sugar", 350, "g"], ["Cardamom powder", 3, "g"], ["Cashew nuts", 30, "g"]],
+    w: ["Roast the besan on low heat until the smell is right, so there is no burnt batch.", "Make a test ladoo before rolling the whole batch.", "Crumble broken ladoos and sell as a loose mix."],
+    p: ["Press one cashew on top of each ladoo.", "Put each ladoo in a small paper cup.", "Pack in rows of equal count."] },
+  "rava ladoo": { a: ["rava ladoo", "rava laddu"],
+    i: [["Rava (sooji)", 400, "g"], ["Sugar", 350, "g"], ["Ghee", 120, "g"], ["Desiccated coconut", 120, "g"], ["Cashew nuts", 30, "g"], ["Raisins", 20, "g"], ["Cardamom powder", 3, "g"], ["Milk", 100, "ml"]],
+    w: ["Roast the rava evenly so it does not stick.", "Add milk a little at a time to avoid wet, sticky ladoos.", "Make smaller ladoos from the last part of the mix."],
+    p: ["Roll in a little dry coconut.", "Top with a raisin.", "Use a clear round box."] }
+};
+function recipeCard() {
+  const t = T[lang], name = itemEl.value.trim().toLowerCase();
+  const g = parseFloat(gEl.value), q = parseFloat(qtyEl.value), u = unitEl.value;
+  const kg = u === "kg" ? q : (u === "pieces" && g > 0 ? q * g / 1000 : 0);
+  const key = Object.keys(REC).find(k => REC[k].a.some(a => name.includes(a)));
+  if (!key) return '<div class="card"><p class="note">' + t.r_none + "</p></div>";
+  if (!(kg > 0)) return "";
+  const r = REC[key];
+  const amt = (v, un) => { const x = v * kg; if (x >= 1000) return +(x / 1000).toFixed(2) + (un === "g" ? " kg" : " L"); return (x < 10 ? +x.toFixed(1) : Math.round(x)) + " " + un; };
+  const rows = r.i.map(i => "<tr><td>" + esc(i[0]) + '</td><td class="qty">' + amt(i[1], i[2]) + "</td></tr>").join("");
+  const li = arr => arr.map(x => "<li>" + esc(x) + "</li>").join("");
+  return '<div class="card"><h2>' + t.r_h.replace("{q}", +kg.toFixed(2)) + "</h2><table><tr><th>" + t.th_i + "</th><th>" + t.th_q + "</th></tr>" + rows + "</table>" +
+    '<p class="note">' + t.r_note + "</p></div>" + rateCard(r) +
+    '<div class="card"><h2>' + t.h_w + "</h2><ul>" + li(r.w) + "</ul></div>" +
+    '<div class="card"><h2>' + t.h_p + "</h2><ul>" + li(r.p) + "</ul></div>";
+}
+
 // 12. Price by city (uses only the rates you type)
+// Starting ingredient rates in ₹ per kg (or per litre). Replace with your own local rates.
+const RATE = { "Full-cream milk": 60, "Milk": 60, "Sugar": 48, "Sugar (for syrup)": 48, "Powdered sugar": 55, "Ghee": 650, "Cardamom powder": 2500,
+  "Citric acid": 150, "Pistachios": 1400, "Cashew nuts": 800, "Khoya (mawa)": 400, "Maida": 45, "Baking soda": 60, "Besan (gram flour)": 100,
+  "Rava (sooji)": 50, "Desiccated coconut": 300, "Raisins": 300 };
+const myRates = {};
+function rateOf(n, k) {
+  if (!myRates[n]) myRates[n] = { h: RATE[n] || 0, v: RATE[n] || 0, z: RATE[n] || 0 };
+  return myRates[n][k];
+}
+function findRec() {
+  const name = itemEl.value.trim().toLowerCase();
+  const key = Object.keys(REC).find(k => REC[k].a.some(a => name.includes(a)));
+  return key ? REC[key] : null;
+}
+function getKg() {
+  const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), u = unitEl.value;
+  return u === "kg" ? (q > 0 ? q : 0) : (u === "pieces" && g > 0 && q > 0 ? q * g / 1000 : 0);
+}
+function rateCard(r) {
+  const t = T[lang];
+  const rows = r.i.filter(i => i[0].indexOf("Water") < 0).map(i => "<tr><td>" + esc(i[0]) + "</td>" +
+    ["h", "v", "z"].map(k => '<td><input class="rt" type="number" min="0" style="min-width:64px;padding:6px" data-n="' + esc(i[0]) + '" data-k="' + k + '" value="' + rateOf(i[0], k) + '"></td>').join("") + "</tr>").join("");
+  return '<div class="card"><h2>' + t.rt_h + '</h2><div style="overflow-x:auto"><table><tr><th>' + t.th_i + "</th><th>" + t.x_hyd + "</th><th>" + t.x_viz + "</th><th>" + t.x_vzm + "</th></tr>" + rows + "</table></div>" +
+    '<p class="note">' + t.rt_note + "</p></div>";
+}
+out.addEventListener("input", e => {
+  const el = e.target.closest(".rt");
+  if (!el) return;
+  rateOf(el.dataset.n, el.dataset.k);
+  myRates[el.dataset.n][el.dataset.k] = parseFloat(el.value) || 0;
+  cityCalc();
+});
+
 function cityCalc() {
-  const t = T[lang], o = document.getElementById("cc_out"), pcs = getPieces();
+  const t = T[lang], o = document.getElementById("cc_out"), pcs = getPieces(), rec = findRec(), kg = getKg();
   const g = parseFloat(gEl.value), mine = parseFloat(pEl.value) || 0;
+  const v = id => parseFloat(document.getElementById(id).value) || 0;
+  const ws = v("pc_wst"), ext = v("pc_ext"), mg = Math.min(v("pc_mar"), 95);
+  const cell = (s, red) => '<td class="qty"' + (red ? ' style="color:#b91c1c"' : "") + ">" + s + "</td>";
   const rows = [["h", t.x_hyd], ["v", t.x_viz], ["z", t.x_vzm]].map(([k, name]) => {
-    const c = parseFloat(document.getElementById("cc_" + k + "_c").value) || 0;
-    const m = parseFloat(document.getElementById("cc_" + k + "_k").value) || 0;
+    const auto = rec && kg > 0 ? rec.i.reduce((s, i) => s + i[1] * kg / 1000 * rateOf(i[0], k), 0) : 0;
+    const box = document.getElementById("cc_" + k + "_c");
+    box.placeholder = auto > 0 ? "₹" + fmt(Math.round(auto)) : "₹";
+    const typed = parseFloat(box.value) || 0, c = typed > 0 ? typed : auto;
+    const m = v("cc_" + k + "_k");
     if (!(c > 0) && !(m > 0)) return "";
-    const cpp = c > 0 && pcs > 0 ? "₹" + (c / pcs).toFixed(1) : "-";
-    const mpp = m > 0 && g > 0 ? "₹" + fmt(Math.round(m * g / 1000)) : "-";
-    let pr = '<td class="qty">-</td>';
-    if (c > 0 && pcs > 0) {
-      const p = Math.round(pcs * mine - c);
-      pr = '<td class="qty"' + (p < 0 ? ' style="color:#b91c1c"' : "") + ">" + (p < 0 ? "−" : "") + "₹" + fmt(Math.abs(p)) + "</td>";
-    }
-    return "<tr><td>" + name + '</td><td class="qty">' + cpp + '</td><td class="qty">' + mpp + "</td>" + pr + "</tr>";
+    const cpp = c > 0 && pcs > 0 ? c / pcs * (1 + ws / 100) + ext : 0;
+    const sug = cpp > 0 ? Math.ceil(cpp / (1 - mg / 100)) : 0;
+    const mpp = m > 0 && g > 0 ? Math.round(m * g / 1000) : 0;
+    const p = cpp > 0 ? Math.round(pcs * (mine - cpp)) : null;
+    return "<tr><td>" + name + "</td>" + cell(c > 0 ? "₹" + fmt(Math.round(c)) : "-") + cell(cpp > 0 ? "₹" + cpp.toFixed(1) : "-") +
+      cell(sug ? "₹" + fmt(sug) : "-") + cell(mpp ? "₹" + fmt(mpp) : "-") +
+      (p === null ? cell("-") : cell((p < 0 ? "−" : "") + "₹" + fmt(Math.abs(p)), p < 0)) + "</tr>";
   }).join("");
   o.innerHTML = rows
-    ? "<table><tr><th>" + t.x_city + "</th><th>" + t.c2_cpp + "</th><th>" + t.x_pc + "</th><th>" + t.x_pr + "</th></tr>" + rows +
-      '</table><p class="note">' + t.x_pn + " " + t.c2_note + "</p>"
+    ? '<div style="overflow-x:auto"><table><tr><th>' + t.x_city + "</th><th>" + t.c3_batch + "</th><th>" + t.c2_cpp + "</th><th>" + t.c3_sug + "</th><th>" + t.c3_mkt + "</th><th>" + t.x_pr + "</th></tr>" + rows +
+      '</table></div><p class="note">' + t.x_pn + " " + t.c2_note + "</p>"
     : "";
 }
 ["h", "v", "z"].forEach(k => ["c", "k"].forEach(s => document.getElementById("cc_" + k + "_" + s).addEventListener("input", cityCalc)));
-["qty", "unit", "gper", "price"].forEach(id => document.getElementById(id).addEventListener("input", cityCalc));
+["qty", "unit", "gper", "price", "item", "pc_ext", "pc_wst", "pc_mar"].forEach(id => document.getElementById(id).addEventListener("input", cityCalc));
 
 goBtn.addEventListener("click", plan);
 applyLang();
