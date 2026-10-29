@@ -81,8 +81,10 @@
         </select>
       </div>
     </div>
+    <label for="sellby" data-t="l_sell"></label>
+    <select id="sellby"><option value="pc" data-t="sb_pc"></option><option value="kg" data-t="sb_kg"></option></select>
     <div class="row">
-      <div>
+      <div id="wbox">
         <label for="gper" data-t="l_g"></label>
         <input id="gper" type="number" min="1" value="40">
       </div>
@@ -132,7 +134,7 @@
     <div id="pc_out" style="margin-top:12px"></div>
   </div>
 
-  <div class="card">
+  <div class="card" id="szcard">
     <h2 data-t="s_h"></h2>
     <div class="row">
       <div><label for="s_sh" data-t="s_shape"></label><select id="s_sh"><option value="sq" data-t="s_sq"></option><option value="rc" data-t="s_rc"></option><option value="dm" data-t="s_dm"></option></select></div>
@@ -145,25 +147,9 @@
   <div class="card">
     <h2 data-t="c2_h"></h2>
     <p class="note" data-t="c2_hint"></p>
-    <div class="row">
-      <div><label data-t="p_ing"></label></div>
-      <div><label data-t="x_kg"></label></div>
-    </div>
-    <label data-t="x_hyd"></label>
-    <div class="row">
-      <div><input id="cc_h_c" type="number" min="0" placeholder="₹"></div>
-      <div><input id="cc_h_k" type="number" min="0" placeholder="₹"></div>
-    </div>
-    <label data-t="x_viz"></label>
-    <div class="row">
-      <div><input id="cc_v_c" type="number" min="0" placeholder="₹"></div>
-      <div><input id="cc_v_k" type="number" min="0" placeholder="₹"></div>
-    </div>
-    <label data-t="x_vzm"></label>
-    <div class="row">
-      <div><input id="cc_z_c" type="number" min="0" placeholder="₹"></div>
-      <div><input id="cc_z_k" type="number" min="0" placeholder="₹"></div>
-    </div>
+    <label data-t="x_hyd"></label><input id="cc_h_c" type="number" min="0" placeholder="₹">
+    <label data-t="x_viz"></label><input id="cc_v_c" type="number" min="0" placeholder="₹">
+    <label data-t="x_vzm"></label><input id="cc_z_c" type="number" min="0" placeholder="₹">
     <div id="cc_out" style="margin-top:12px"></div>
   </div>
 </main>
@@ -172,12 +158,14 @@
 // 1. Words shown on the page, in English and Telugu
 const T = {
   en: {
+    l_sell: "Sell by", sb_pc: "Per piece", sb_kg: "Per kg", l_pk: "Price per kg (₹)", c_kgs: "Total kg", c_note_k: "Worked out at ₹{p} per kg.",
+    p_cost_k: "Total cost per kg", p_sug_k: "Suggested price per kg", c2_cpp_k: "Cost / kg", p_ext_k: "Labour, gas, packing per kg (₹)",
     rt_h: "Ingredient rates by city (₹ per kg or litre)", rt_note: "Starting estimates only. Type your real local rates and the costs update at once.",
     c3_batch: "Batch cost", c3_sug: "Suggested price", c3_mkt: "Market price / piece",
     r_h: "Ingredients for {q} kg (starter recipe)", r_none: "No recipe is saved for this item yet. Send your own recipe and it will be added.",
     r_note: "Approximate starter amounts per kg of finished sweet. Your own recipe will replace these. Recipe text is in English for now.",
-    c2_h: "Price by city (your own rates)", c2_hint: "Costs fill in from the ingredient rates above. Type a batch cost to replace it, and the market price per kg for each city.", c2_cpp: "Cost / piece",
-    c2_note: "Ingredient rates are starting estimates. Check your local suppliers and shops for real rates.",
+    c2_h: "Price by city (batch cost in each city)", c2_hint: "Type your ingredient cost for this batch in each city.", c2_cpp: "Cost / piece",
+    c2_note: "Based only on the batch costs you type for each city.",
     p_h: "Selling price calculator", p_ing: "Your ingredient cost for this batch (₹)", p_ext: "Labour, gas, packing per piece (₹)", p_wst: "Wastage (%)", p_mar: "Margin you want (%)",
     p_hint: "Enter your batch ingredient cost above, with a quantity in kg or pieces, to see the suggested price.",
     p_cost: "Total cost per piece", p_sug: "Suggested price per piece", p_kg: "Suggested price per kg", p_prof: "Profit for this batch", p_mine: "Profit at your price (₹{p})",
@@ -208,12 +196,14 @@ const T = {
     lang_ai: "English"
   },
   te: {
+    l_sell: "అమ్మే విధానం", sb_pc: "ముక్కల వారీగా", sb_kg: "కిలోల వారీగా", l_pk: "కిలో ధర (₹)", c_kgs: "మొత్తం కిలోలు", c_note_k: "కిలోకు ₹{p} చొప్పున లెక్కించాం.",
+    p_cost_k: "మొత్తం ఖర్చు / కిలో", p_sug_k: "సూచించిన ధర / కిలో", c2_cpp_k: "ఖర్చు / కిలో", p_ext_k: "ఒక్క కిలోకు కూలీ, గ్యాస్, ప్యాకింగ్ (₹)",
     rt_h: "నగరాల వారీగా పదార్థాల రేట్లు (₹ కిలో లేదా లీటర్‌కు)", rt_note: "ఇవి ప్రారంభ అంచనాలు మాత్రమే. మీ నిజమైన స్థానిక రేట్లు ఇవ్వండి, ఖర్చులు వెంటనే మారుతాయి.",
     c3_batch: "బ్యాచ్ ఖర్చు", c3_sug: "సూచించిన ధర", c3_mkt: "మార్కెట్ ధర / ముక్క",
     r_h: "{q} కిలోలకు పదార్థాలు (ప్రాథమిక రెసిపీ)", r_none: "ఈ ఐటమ్‌కు ఇంకా రెసిపీ లేదు. మీ రెసిపీ ఇస్తే చేర్చుతాను.",
     r_note: "ఇవి కిలో తయారైన స్వీట్‌కు సుమారు ప్రాథమిక కొలతలు. మీ సొంత రెసిపీ వచ్చాక మారుస్తాం. రెసిపీ వివరాలు ప్రస్తుతం ఇంగ్లీషులో ఉన్నాయి.",
-    c2_h: "నగరాల వారీగా ధర (మీ సొంత రేట్లు)", c2_hint: "ఖర్చులు పై పదార్థాల రేట్ల నుండి వస్తాయి. మార్చాలంటే బ్యాచ్ ఖర్చు ఇవ్వండి, అలాగే ప్రతి నగరానికి కిలో మార్కెట్ ధర ఇవ్వండి.", c2_cpp: "ఖర్చు / ముక్క",
-    c2_note: "పదార్థాల రేట్లు ప్రారంభ అంచనాలు మాత్రమే. నిజమైన రేట్ల కోసం స్థానిక సరఫరాదారులు, షాపులను అడగండి.",
+    c2_h: "నగరాల వారీగా ధర (ప్రతి నగరంలో బ్యాచ్ ఖర్చు)", c2_hint: "ప్రతి నగరంలో ఈ బ్యాచ్ పదార్థాల ఖర్చు ఇవ్వండి.", c2_cpp: "ఖర్చు / ముక్క",
+    c2_note: "ప్రతి నగరానికి మీరు ఇచ్చిన బ్యాచ్ ఖర్చుల ఆధారంగా మాత్రమే.",
     p_h: "అమ్మకం ధర కాలిక్యులేటర్", p_ing: "ఈ బ్యాచ్‌కు మీ పదార్థాల ఖర్చు (₹)", p_ext: "ఒక్క ముక్కకు కూలీ, గ్యాస్, ప్యాకింగ్ (₹)", p_wst: "వృథా (%)", p_mar: "కావలసిన మార్జిన్ (%)",
     p_hint: "సూచించిన ధర చూడటానికి మీ బ్యాచ్ పదార్థాల ఖర్చు ఇవ్వండి, పరిమాణం కిలోలు లేదా ముక్కలలో ఇవ్వండి.",
     p_cost: "ఒక్క ముక్క మొత్తం ఖర్చు", p_sug: "సూచించిన ధర / ముక్క", p_kg: "సూచించిన ధర / కిలో", p_prof: "ఈ బ్యాచ్ లాభం", p_mine: "మీ ధర (₹{p}) వద్ద లాభం",
@@ -286,6 +276,7 @@ function applyLang() {
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t[el.dataset.t]; });
   itemEl.placeholder = t.ph;
+  applyMode();
   goBtn.textContent = t.go;
   out.innerHTML = "";
 }
@@ -299,7 +290,7 @@ function showChips() {
 }
 chips.addEventListener("click", e => {
   const b = e.target.closest(".chip");
-  if (b) { itemEl.value = b.dataset.name; window.scrollTo({ top: 0, behavior: "smooth" }); }
+  if (b) { itemEl.value = b.dataset.name; const c = CAT.find(x => x.n === b.dataset.name); if (c) { document.getElementById("sellby").value = c.t === "n" ? "kg" : "pc"; applyMode(); priceCalc(); cityCalc(); drawSize(); } window.scrollTo({ top: 0, behavior: "smooth" }); }
 });
 ftype.addEventListener("change", showChips);
 freg.addEventListener("change", showChips);
@@ -309,13 +300,13 @@ function calcCard() {
   const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), p = parseFloat(pEl.value), u = unitEl.value, t = T[lang];
   if (!(q > 0) || !(p >= 0)) return "";
   let pcs;
-  if (u === "kg") { if (!(g > 0)) return ""; pcs = Math.floor(q * 1000 / g); }
+  if (u === "kg") { if (!(g > 0)) return ""; pcs = isKgMode() ? q : Math.floor(q * 1000 / g); }
   else if (u === "pieces") pcs = q;
   else return "";
   return '<div class="card"><h2>' + t.c_h + "</h2><table>" +
-    "<tr><td>" + t.c_pcs + '</td><td class="qty">' + fmt(pcs) + "</td></tr>" +
+    "<tr><td>" + (isKgMode() ? t.c_kgs : t.c_pcs) + '</td><td class="qty">' + fmt(pcs) + "</td></tr>" +
     "<tr><td>" + t.c_val + '</td><td class="qty">₹' + fmt(pcs * p) + "</td></tr></table>" +
-    (u === "kg" ? '<p class="note">' + t.c_note.replace("{g}", g).replace("{p}", p) + "</p>" : "") + "</div>";
+    (u === "kg" ? '<p class="note">' + (isKgMode() ? t.c_note_k : t.c_note).replace("{g}", g).replace("{p}", p) + "</p>" : "") + "</div>";
 }
 
 // 8. Show pieces and sales value (no AI needed)
@@ -371,7 +362,7 @@ function show(d, calc) {
 function getPieces() {
   const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), u = unitEl.value;
   if (!(q > 0)) return 0;
-  if (u === "kg") return g > 0 ? Math.floor(q * 1000 / g) : 0;
+  if (u === "kg") return g > 0 ? (isKgMode() ? q : Math.floor(q * 1000 / g)) : 0;
   return u === "pieces" ? q : 0;
 }
 function priceCalc() {
@@ -385,9 +376,9 @@ function priceCalc() {
   const pf = x => { const r = Math.round(x); return '<td class="qty"' + (r < 0 ? ' style="color:#b91c1c"' : "") + ">" + (r < 0 ? "−" : "") + "₹" + fmt(Math.abs(r)) + "</td>"; };
   const row = (l, c) => "<tr><td>" + l + "</td>" + c + "</tr>";
   o.innerHTML = "<table>" +
-    row(t.p_cost, '<td class="qty">₹' + cost.toFixed(1) + "</td>") +
-    row(t.p_sug, '<td class="qty">₹' + fmt(sug) + "</td>") +
-    row(t.p_kg, '<td class="qty">₹' + fmt(kg) + "</td>") +
+    row(Lbl("p_cost"), '<td class="qty">₹' + cost.toFixed(1) + "</td>") +
+    row(Lbl("p_sug"), '<td class="qty">₹' + fmt(sug) + "</td>") +
+    (isKgMode() ? "" : row(t.p_kg, '<td class="qty">₹' + fmt(kg) + "</td>")) +
     row(t.p_prof, pf((sug - cost) * pcs)) +
     row(t.p_mine.replace("{p}", mine), pf((mine - cost) * pcs)) +
     '</table><p class="note">' + t.p_note + "</p>";
@@ -421,11 +412,11 @@ function drawSize() {
 // 11b. Starter recipes per 1 kg of finished sweet (replace with your own recipes)
 const REC = {
   kalakand: { a: ["kalakand", "kalkand", "kalkanda"],
-    i: [["Full-cream milk", 4000, "ml"], ["Sugar", 300, "g"], ["Ghee", 20, "g"], ["Cardamom powder", 2, "g"], ["Citric acid", 3, "g"], ["Pistachios", 20, "g"]],
+    i: [["Full-cream milk", 4000, "ml"], ["Sugar", 300, "g"], ["Ghee", 20, "g"], ["Cardamom powder", 2, "g"], ["Citric acid", 3, "g"], ["Pistachios", 20, "g"], ["Silver varq (optional)", 3, "sheets"]],
     w: ["Stir the milk all the time so nothing sticks and burns at the bottom.", "Keep the whey and use it in dough or curries.", "Sell cut edges and broken pieces as a mixed pack."],
     p: ["Sprinkle chopped pistachio on top.", "Cut into even squares and place on butter paper.", "Pack in a window box so the colour shows."] },
   kaju: { a: ["kaju", "cashew"],
-    i: [["Cashew nuts", 700, "g"], ["Sugar", 350, "g"], ["Water", 175, "ml"], ["Ghee", 30, "g"], ["Cardamom powder", 2, "g"]],
+    i: [["Cashew nuts", 700, "g"], ["Sugar", 350, "g"], ["Water", 175, "ml"], ["Ghee", 30, "g"], ["Cardamom powder", 2, "g"], ["Silver varq (optional)", 4, "sheets"]],
     w: ["Grind the cashew in short bursts so it does not turn oily.", "Re-roll the dough trimmings and cut again.", "Keep broken pieces for a mixed box or for mithai fillings."],
     p: ["Cut clean diamonds of the same size.", "Add a thin silver varq on top.", "Pack in rows in a gift box with a paper divider."] },
   "gulab jamun": { a: ["gulab jamun", "jamun"],
@@ -457,73 +448,48 @@ function recipeCard() {
   const rows = r.i.map(i => "<tr><td>" + esc(i[0]) + '</td><td class="qty">' + amt(i[1], i[2]) + "</td></tr>").join("");
   const li = arr => arr.map(x => "<li>" + esc(x) + "</li>").join("");
   return '<div class="card"><h2>' + t.r_h.replace("{q}", +kg.toFixed(2)) + "</h2><table><tr><th>" + t.th_i + "</th><th>" + t.th_q + "</th></tr>" + rows + "</table>" +
-    '<p class="note">' + t.r_note + "</p></div>" + rateCard(r) +
+    '<p class="note">' + t.r_note + "</p></div>" +
     '<div class="card"><h2>' + t.h_w + "</h2><ul>" + li(r.w) + "</ul></div>" +
     '<div class="card"><h2>' + t.h_p + "</h2><ul>" + li(r.p) + "</ul></div>";
 }
 
 // 12. Price by city (uses only the rates you type)
-// Starting ingredient rates in ₹ per kg (or per litre). Replace with your own local rates.
-const RATE = { "Full-cream milk": 60, "Milk": 60, "Sugar": 48, "Sugar (for syrup)": 48, "Powdered sugar": 55, "Ghee": 650, "Cardamom powder": 2500,
-  "Citric acid": 150, "Pistachios": 1400, "Cashew nuts": 800, "Khoya (mawa)": 400, "Maida": 45, "Baking soda": 60, "Besan (gram flour)": 100,
-  "Rava (sooji)": 50, "Desiccated coconut": 300, "Raisins": 300 };
-const myRates = {};
-function rateOf(n, k) {
-  if (!myRates[n]) myRates[n] = { h: RATE[n] || 0, v: RATE[n] || 0, z: RATE[n] || 0 };
-  return myRates[n][k];
+// Sell by kg (for sev, kara boondi, janthikalu and similar): one "piece" means 1 kg
+function isKgMode() { return document.getElementById("sellby").value === "kg"; }
+function applyMode() {
+  const t = T[lang], kgm = isKgMode(), un = document.getElementById("unit");
+  document.getElementById("wbox").style.display = kgm ? "none" : "";
+  document.getElementById("szcard").style.display = kgm ? "none" : "";
+  if (kgm) { un.value = "kg"; un.disabled = true; if (gEl.dataset.keep === undefined) gEl.dataset.keep = gEl.value; gEl.value = 1000; }
+  else { un.disabled = false; if (gEl.dataset.keep !== undefined) { gEl.value = gEl.dataset.keep; delete gEl.dataset.keep; } }
+  document.querySelector('label[for="price"]').textContent = kgm ? t.l_pk : t.l_p;
+  document.querySelector('label[for="pc_ext"]').textContent = kgm ? t.p_ext_k : t.p_ext;
 }
-function findRec() {
-  const name = itemEl.value.trim().toLowerCase();
-  const key = Object.keys(REC).find(k => REC[k].a.some(a => name.includes(a)));
-  return key ? REC[key] : null;
-}
-function getKg() {
-  const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), u = unitEl.value;
-  return u === "kg" ? (q > 0 ? q : 0) : (u === "pieces" && g > 0 && q > 0 ? q * g / 1000 : 0);
-}
-function rateCard(r) {
-  const t = T[lang];
-  const rows = r.i.filter(i => i[0].indexOf("Water") < 0).map(i => "<tr><td>" + esc(i[0]) + "</td>" +
-    ["h", "v", "z"].map(k => '<td><input class="rt" type="number" min="0" style="min-width:64px;padding:6px" data-n="' + esc(i[0]) + '" data-k="' + k + '" value="' + rateOf(i[0], k) + '"></td>').join("") + "</tr>").join("");
-  return '<div class="card"><h2>' + t.rt_h + '</h2><div style="overflow-x:auto"><table><tr><th>' + t.th_i + "</th><th>" + t.x_hyd + "</th><th>" + t.x_viz + "</th><th>" + t.x_vzm + "</th></tr>" + rows + "</table></div>" +
-    '<p class="note">' + t.rt_note + "</p></div>";
-}
-out.addEventListener("input", e => {
-  const el = e.target.closest(".rt");
-  if (!el) return;
-  rateOf(el.dataset.n, el.dataset.k);
-  myRates[el.dataset.n][el.dataset.k] = parseFloat(el.value) || 0;
-  cityCalc();
-});
+function Lbl(k) { const t = T[lang]; return (isKgMode() && t[k + "_k"]) ? t[k + "_k"] : t[k]; }
 
+// 12. Price by city (batch cost you type for each city)
 function cityCalc() {
-  const t = T[lang], o = document.getElementById("cc_out"), pcs = getPieces(), rec = findRec(), kg = getKg();
-  const g = parseFloat(gEl.value), mine = parseFloat(pEl.value) || 0;
+  const t = T[lang], o = document.getElementById("cc_out"), pcs = getPieces(), mine = parseFloat(pEl.value) || 0;
   const v = id => parseFloat(document.getElementById(id).value) || 0;
   const ws = v("pc_wst"), ext = v("pc_ext"), mg = Math.min(v("pc_mar"), 95);
   const cell = (s, red) => '<td class="qty"' + (red ? ' style="color:#b91c1c"' : "") + ">" + s + "</td>";
   const rows = [["h", t.x_hyd], ["v", t.x_viz], ["z", t.x_vzm]].map(([k, name]) => {
-    const auto = rec && kg > 0 ? rec.i.reduce((s, i) => s + i[1] * kg / 1000 * rateOf(i[0], k), 0) : 0;
-    const box = document.getElementById("cc_" + k + "_c");
-    box.placeholder = auto > 0 ? "₹" + fmt(Math.round(auto)) : "₹";
-    const typed = parseFloat(box.value) || 0, c = typed > 0 ? typed : auto;
-    const m = v("cc_" + k + "_k");
-    if (!(c > 0) && !(m > 0)) return "";
-    const cpp = c > 0 && pcs > 0 ? c / pcs * (1 + ws / 100) + ext : 0;
+    const c = v("cc_" + k + "_c");
+    if (!(c > 0)) return "";
+    const cpp = pcs > 0 ? c / pcs * (1 + ws / 100) + ext : 0;
     const sug = cpp > 0 ? Math.ceil(cpp / (1 - mg / 100)) : 0;
-    const mpp = m > 0 && g > 0 ? Math.round(m * g / 1000) : 0;
     const p = cpp > 0 ? Math.round(pcs * (mine - cpp)) : null;
-    return "<tr><td>" + name + "</td>" + cell(c > 0 ? "₹" + fmt(Math.round(c)) : "-") + cell(cpp > 0 ? "₹" + cpp.toFixed(1) : "-") +
-      cell(sug ? "₹" + fmt(sug) : "-") + cell(mpp ? "₹" + fmt(mpp) : "-") +
+    return "<tr><td>" + name + "</td>" + cell("₹" + fmt(Math.round(c))) + cell(cpp > 0 ? "₹" + cpp.toFixed(1) : "-") + cell(sug ? "₹" + fmt(sug) : "-") +
       (p === null ? cell("-") : cell((p < 0 ? "−" : "") + "₹" + fmt(Math.abs(p)), p < 0)) + "</tr>";
   }).join("");
   o.innerHTML = rows
-    ? '<div style="overflow-x:auto"><table><tr><th>' + t.x_city + "</th><th>" + t.c3_batch + "</th><th>" + t.c2_cpp + "</th><th>" + t.c3_sug + "</th><th>" + t.c3_mkt + "</th><th>" + t.x_pr + "</th></tr>" + rows +
+    ? '<div style="overflow-x:auto"><table><tr><th>' + t.x_city + "</th><th>" + t.c3_batch + "</th><th>" + Lbl("c2_cpp") + "</th><th>" + t.c3_sug + "</th><th>" + t.x_pr + "</th></tr>" + rows +
       '</table></div><p class="note">' + t.x_pn + " " + t.c2_note + "</p>"
     : "";
 }
-["h", "v", "z"].forEach(k => ["c", "k"].forEach(s => document.getElementById("cc_" + k + "_" + s).addEventListener("input", cityCalc)));
-["qty", "unit", "gper", "price", "item", "pc_ext", "pc_wst", "pc_mar"].forEach(id => document.getElementById(id).addEventListener("input", cityCalc));
+["h", "v", "z"].forEach(k => document.getElementById("cc_" + k + "_c").addEventListener("input", cityCalc));
+document.getElementById("sellby").addEventListener("change", () => { applyMode(); priceCalc(); cityCalc(); drawSize(); });
+["qty", "unit", "gper", "price", "pc_ext", "pc_wst", "pc_mar"].forEach(id => document.getElementById(id).addEventListener("input", cityCalc));
 
 goBtn.addEventListener("click", plan);
 applyLang();
