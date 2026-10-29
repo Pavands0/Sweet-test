@@ -1,3 +1,22 @@
+Claude
+/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sweet shop code · TXT
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,7 +82,7 @@
     </select>
   </div>
   <p class="sub" data-t="sub"></p>
-
+ 
   <div class="card">
     <label for="item" data-t="l_item"></label>
     <input id="item">
@@ -95,7 +114,7 @@
     </div>
     <button id="go"></button>
   </div>
-
+ 
   <div class="card">
     <h2 data-t="b_h"></h2>
     <div class="row">
@@ -118,9 +137,9 @@
     </div>
     <div class="chips" id="chips"></div>
   </div>
-
+ 
   <div id="out"></div>
-
+ 
   <div class="card">
     <h2 data-t="p_h"></h2>
     <div class="row">
@@ -133,7 +152,7 @@
     </div>
     <div id="pc_out" style="margin-top:12px"></div>
   </div>
-
+ 
   <div class="card" id="szcard">
     <h2 data-t="s_h"></h2>
     <div class="row">
@@ -152,8 +171,9 @@
     <label data-t="x_vzm"></label><input id="cc_z_c" type="number" min="0" placeholder="₹">
     <div id="cc_out" style="margin-top:12px"></div>
   </div>
+  <p class="note" style="text-align:center">Version 3 · 29 Oct</p>
 </main>
-
+ 
 <script>
 // 1. Words shown on the page, in English and Telugu
 const T = {
@@ -235,7 +255,7 @@ const T = {
   }
 };
 let lang = "en";
-
+ 
 // 2. All-India list: Name | region | type (s = sweet, f = sugar-free, n = namkeen/snack)
 const RAW =
  "Gulab Jamun|N|s;Jalebi|N|s;Peda|N|s;Kalakand|N|s;Barfi|N|s;Gajar Halwa|N|s;Soan Papdi|N|s;Besan Ladoo|N|s;Rabri|N|s;Petha|N|s;Balushahi|N|s;Sohan Halwa|N|s;Ghewar|N|s;Malpua|N|s;Moong Dal Halwa|N|s;Imarti|N|s;" +
@@ -248,7 +268,7 @@ const RAW =
  "Khakhra|W|n;Gathiya|W|n;Fafda|W|n;Thepla|W|n;Dhokla|W|n;Chivda|W|n;Sev|W|n;Sev Papdi|W|n;Bikaneri Bhujia|N|n;Mathri|N|n;Namak Para|N|n;Aloo Bhujia|N|n;Khasta Kachori|N|n;Samosa|N|n;" +
  "Murukku|S|n;Chakli|S|n;South Indian Mixture|S|n;Kara Boondi|S|n;Ribbon Pakoda|S|n;Banana Chips|S|n;Chegodilu|S|n;Janthikalu|S|n;Sakinalu|S|n;Jhalmuri|E|n;Nimki|E|n;Chanachur|E|n";
 const CAT = RAW.split(";").map(x => { const p = x.split("|"); return { n: p[0], r: p[1], t: p[2] }; });
-
+ 
 // 3. Grab the parts of the page we need to control
 const itemEl = document.getElementById("item");
 const qtyEl = document.getElementById("qty");
@@ -261,7 +281,7 @@ const langEl = document.getElementById("lang");
 const ftype = document.getElementById("ftype");
 const freg = document.getElementById("freg");
 const chips = document.getElementById("chips");
-
+ 
 // 4. Safely add text to the page
 function esc(s) {
   const d = document.createElement("div");
@@ -269,7 +289,7 @@ function esc(s) {
   return d.innerHTML;
 }
 const fmt = n => Number(n).toLocaleString("en-IN");
-
+ 
 // 5. Switch the page between English and Telugu
 function applyLang() {
   const t = T[lang];
@@ -281,7 +301,7 @@ function applyLang() {
   out.innerHTML = "";
 }
 langEl.addEventListener("change", () => { lang = langEl.value; applyLang(); priceCalc(); drawSize(); cityCalc(); });
-
+ 
 // 6. Show the item buttons for the chosen type and region
 function showChips() {
   const ty = ftype.value, rg = freg.value;
@@ -294,7 +314,7 @@ chips.addEventListener("click", e => {
 });
 ftype.addEventListener("change", showChips);
 freg.addEventListener("change", showChips);
-
+ 
 // 7. Work out pieces and sales value (plain maths, no AI)
 function calcCard() {
   const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), p = parseFloat(pEl.value), u = unitEl.value, t = T[lang];
@@ -308,7 +328,7 @@ function calcCard() {
     "<tr><td>" + t.c_val + '</td><td class="qty">₹' + fmt(pcs * p) + "</td></tr></table>" +
     (u === "kg" ? '<p class="note">' + (isKgMode() ? t.c_note_k : t.c_note).replace("{g}", g).replace("{p}", p) + "</p>" : "") + "</div>";
 }
-
+ 
 // 8. Show pieces and sales value (no AI needed)
 function plan() {
   const t = T[lang];
@@ -318,7 +338,7 @@ function plan() {
   cityCalc();
   drawSize();
 }
-
+ 
 // 8b. Price estimate for each city (numbers come from Claude, maths is done here)
 function cityCard(d) {
   const t = T[lang], g = parseFloat(gEl.value);
@@ -341,7 +361,7 @@ function cityCard(d) {
   return '<div class="card"><h2>' + t.x_h + "</h2><table><tr><th>" + t.x_city + "</th><th>" + t.x_cost + "</th><th>" + t.x_kg + "</th><th>" + t.x_pc + "</th><th>" + t.x_pr +
     "</th></tr>" + rows + '</table><p class="note">' + t.x_note + " " + t.x_pn + "</p></div>";
 }
-
+ 
 // 9. Show the result as cards
 function show(d, calc) {
   const t = T[lang];
@@ -349,7 +369,7 @@ function show(d, calc) {
     "<tr><td>" + esc(i.name) + (i.note ? '<div class="note">' + esc(i.note) + "</div>" : "") +
     '</td><td class="qty">' + esc(i.amount) + "</td></tr>").join("");
   const li = arr => (arr || []).map(x => "<li>" + esc(x) + "</li>").join("");
-
+ 
   out.innerHTML = calc +
     '<div class="card"><h2>' + t.h_ing + esc(d.item) + "</h2>" +
     "<table><tr><th>" + t.th_i + "</th><th>" + t.th_q + "</th></tr>" + rows + "</table>" +
@@ -357,7 +377,7 @@ function show(d, calc) {
     '<div class="card"><h2>' + t.h_w + "</h2><ul>" + li(d.waste_tips) + "</ul></div>" +
     '<div class="card"><h2>' + t.h_p + "</h2><ul>" + li(d.presentation) + "</ul></div>" + cityCard(d);
 }
-
+ 
 // 10. Selling price calculator (uses your own costs, plain maths)
 function getPieces() {
   const q = parseFloat(qtyEl.value), g = parseFloat(gEl.value), u = unitEl.value;
@@ -384,7 +404,7 @@ function priceCalc() {
     '</table><p class="note">' + t.p_note + "</p>";
 }
 ["pc_ing", "pc_ext", "pc_wst", "pc_mar", "qty", "unit", "gper", "price"].forEach(id => document.getElementById(id).addEventListener("input", priceCalc));
-
+ 
 // 11. Piece size drawing (top view and side view, drawn to scale)
 function drawSize() {
   const t = T[lang], svgEl = document.getElementById("s_svg");
@@ -408,7 +428,7 @@ function drawSize() {
   document.getElementById("s_note").textContent = t.s_note.replace("{n}", Math.floor(1000 / g));
 }
 ["s_sh", "s_th", "s_de", "gper"].forEach(id => document.getElementById(id).addEventListener("input", drawSize));
-
+ 
 // 11b. Starter recipes per 1 kg of finished sweet (replace with your own recipes)
 const REC = {
   kalakand: { a: ["kalakand", "kalkand", "kalkanda"],
@@ -452,7 +472,7 @@ function recipeCard() {
     '<div class="card"><h2>' + t.h_w + "</h2><ul>" + li(r.w) + "</ul></div>" +
     '<div class="card"><h2>' + t.h_p + "</h2><ul>" + li(r.p) + "</ul></div>";
 }
-
+ 
 // 12. Price by city (uses only the rates you type)
 // Sell by kg (for sev, kara boondi, janthikalu and similar): one "piece" means 1 kg
 function isKgMode() { return document.getElementById("sellby").value === "kg"; }
@@ -466,7 +486,7 @@ function applyMode() {
   document.querySelector('label[for="pc_ext"]').textContent = kgm ? t.p_ext_k : t.p_ext;
 }
 function Lbl(k) { const t = T[lang]; return (isKgMode() && t[k + "_k"]) ? t[k + "_k"] : t[k]; }
-
+ 
 // 12. Price by city (batch cost you type for each city)
 function cityCalc() {
   const t = T[lang], o = document.getElementById("cc_out"), pcs = getPieces(), mine = parseFloat(pEl.value) || 0;
@@ -490,7 +510,7 @@ function cityCalc() {
 ["h", "v", "z"].forEach(k => document.getElementById("cc_" + k + "_c").addEventListener("input", cityCalc));
 document.getElementById("sellby").addEventListener("change", () => { applyMode(); priceCalc(); cityCalc(); drawSize(); });
 ["qty", "unit", "gper", "price", "pc_ext", "pc_wst", "pc_mar"].forEach(id => document.getElementById(id).addEventListener("input", cityCalc));
-
+ 
 goBtn.addEventListener("click", plan);
 applyLang();
 showChips();
@@ -500,3 +520,5 @@ cityCalc();
 </script>
 </body>
 </html>
+ 
+Claude is responding
